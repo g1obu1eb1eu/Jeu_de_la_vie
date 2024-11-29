@@ -1,12 +1,7 @@
-/*---------------------Fenêtre SFML---------------------*/
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <ctime>
 #include <cstdlib>
-/*---------------------Fichier---------------------*/
-#include <iostream>
-#include <fstream>
-#include <string>
 
 const int cellSize = 10;
 const int gridWidth = 80;
@@ -40,32 +35,6 @@ void renderGrid(sf::RenderWindow &window) {
 }
 
 int main() {
-    /*---------------------Fichier---------------------*/
-    // Nom du fichier
-    std::string fileName = "../../src/grille.txt";
-
-    // Ouvrir le fichier en mode lecture
-    std::ifstream file(fileName);
-
-    // Vérifier si le fichier est ouvert correctement
-    if (!file.is_open()) {
-        std::cerr << "Erreur : impossible d'ouvrir le fichier " << fileName << std::endl;
-        return 1; // Retourne une erreur
-    }
-
-    std::string line;
-    std::cout << "Contenu du fichier :" << std::endl;
-
-    // Lire le fichier ligne par ligne
-    while (std::getline(file, line)) {
-        std::cout << line << std::endl;
-    }
-
-    // Fermer le fichier
-    file.close();
-
-    /*---------------------Fenêtre SFML---------------------*/
-
     sf::RenderWindow window(sf::VideoMode(gridWidth * cellSize, gridHeight * cellSize), "Game of Life");
     
     initializeGrid();
