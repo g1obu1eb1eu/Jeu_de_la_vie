@@ -3,10 +3,7 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
-/*---------------------Fichier---------------------*/
-#include <iostream>
-#include <fstream>
-#include <string>
+#include "Cells.hpp"
 
 const int cellSize = 10;
 const int gridWidth = 80;
@@ -18,7 +15,7 @@ void initializeGrid() {
     std::srand(std::time(0));
     for (int x = 0; x < gridWidth; ++x) {
         for (int y = 0; y < gridHeight; ++y) {
-            grid[x][y] = std::rand() % 2;  // Randomly initialize cells as alive or dead
+            grid[x][y] = std::rand() % 2;  
         }
     }
 }
