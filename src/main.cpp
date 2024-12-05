@@ -5,79 +5,66 @@
 #include <cstdlib>
 #include "Cells.hpp"
 
-const int cellSize = 10;
-const int gridWidth = 80;
-const int gridHeight = 80;
+class Window{
+    private:
+        File Myfile;
+        float cellSize=0.5, gridWidth, gridHeight;
+        std::vector<std::vector<bool>> grid;
+        
+    public:
+        Window(const std::string& filename): Myfile(filename), grid(Myfile.GetList()) {}
 
-std::vector<std::vector<int>> grid(gridWidth, std::vector<int>(gridHeight));
+        void renderGrid(sf::RenderWindow &window) {
+            int x, y;
+            gridHeight = grid.size();
+            gridWidth = grid[0].size();
 
-void initializeGrid() {
-    std::srand(std::time(0));
-    for (int x = 0; x < gridWidth; ++x) {
-        for (int y = 0; y < gridHeight; ++y) {
-            grid[x][y] = std::rand() % 2;  
+            window.clear();
+
+            sf::RectangleShape cell(sf::Vector2f(cellSize - 1.0f, cellSize - 1.0f));
+            for (x = 0; x < gridHeight; x++) {
+                for (y = 0; y < gridWidth; y++) {
+                    if (grid[x][y]) {
+                        cell.setPosition(x * cellSize, y * cellSize);
+                        window.draw(cell);
+                    }
+                }
+            }
+            window.display();
         }
-    }
-}
 
-void renderGrid(sf::RenderWindow &window) {
-    int x, y;
-    
-    window.clear();
-    sf::RectangleShape cell(sf::Vector2f(cellSize - 1.0f, cellSize - 1.0f));
-    for (x = 0; x < gridWidth; ++x) {
-        for (y = 0; y < gridHeight; ++y) {
-            if (grid[x][y] == 1) {
-                cell.setPosition(x * cellSize, y * cellSize);
-                window.draw(cell);
+        void run() {
+            gridHeight = grid.size();
+            gridWidth = grid[0].size();
+
+            sf::RenderWindow window(sf::VideoMode(gridWidth * cellSize, gridHeight * cellSize), "Game of Life");
+
+            while (window.isOpen()) {
+                sf::Event event;
+                while (window.pollEvent(event)) {
+                    if (event.type == sf::Event::Closed)
+                        window.close();
+                }
+
+                renderGrid(window);
+                sf::sleep(sf::milliseconds(100)); // Adjust or replace with clock for frame control
             }
         }
-    }
-    window.display();
-}
+
+};
+
 
 int main() {
-    /*---------------------Fichier---------------------*/
-    // Nom du fichier
-    std::string fileName = "../../src/grille.txt";
+    std::string MyTxt = "../../src/grille.txt";
+    File file(MyTxt);
+    Cells myCells(file);
+    for (int i =0; i < 3; i++) myCells.NextCell();;
 
-    // Ouvrir le fichier en mode lecture
-    std::ifstream file(fileName);
+    // /*---------------------Fenêtre SFML---------------------*/
 
-    // Vérifier si le fichier est ouvert correctement
-    if (!file.is_open()) {
-        std::cerr << "Erreur : impossible d'ouvrir le fichier " << fileName << std::endl;
-        return 1; // Retourne une erreur
-    }
-
-    std::string line;
-    std::cout << "Contenu du fichier :" << std::endl;
-
-    // Lire le fichier ligne par ligne
-    while (std::getline(file, line)) {
-        std::cout << line << std::endl;
-    }
-
-    // Fermer le fichier
-    file.close();
-
-    /*---------------------Fenêtre SFML---------------------*/
-
-    sf::RenderWindow window(sf::VideoMode(gridWidth * cellSize, gridHeight * cellSize), "Game of Life");
-    
-    initializeGrid();
-
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        renderGrid(window);
-
-        sf::sleep(sf::milliseconds(100));
-    }
+    // Window instance
+    Window gameWindow(MyTxt); 
+    gameWindow.run();
 
     return 0;
 }
