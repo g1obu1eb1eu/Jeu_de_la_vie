@@ -1,55 +1,58 @@
 #ifndef FILE_HPP
 #define FILE_HPP
 
-#include <iostream>
+#include "Matrice.hpp"
 #include <fstream>
 #include <string>
-#include <vector>
 
-class File{
-    private:
-        std::string file;
-        int row, column;
-        std::vector<std::vector<bool>> grille;
-    public:
-        File(std::string file) : file(file) {}
-        int FileInMatrix(){
-            std::ifstream fichier(file);
-            if(!fichier) {
-                std::cerr << "Erreur : impossible d'ouvrir le fichier." << std::endl;
-                return 1;
-            }
+class File : public Matrice {
+private:
+    std::string filename;
 
-            if (fichier >> row >> column) std::cout << "valeur extraite : " << row <<" & "<< column << "\n" << std::endl;
-            else std::cerr << "Impossible de lire les valeurs" <<std::endl;
+public:
+    File(const std::string& file) : filename(file) {}
+    ~File() = default;
 
-            for (int i = 0; i<row; i++){
-                std::vector<bool> ligne;
-                bool val;
-                for (int j = 0; j<column; j++){
-                    fichier >> val;
-                    ligne.push_back(val);
+    void createMatrix() override {
+        std::ifstream file(filename);
+        if (!file) {
+            std::cerr << "Erreur : impossible d'ouvrir le fichier " << filename << ".\n";
+            return;
+        }
+
+        int rows, cols;
+        file >> rows >> cols;
+
+        grid.assign(rows, std::vector<int>(cols, 0)); // Redimensionne la matrice
+
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                if (!(file >> grid[i][j]) || (grid[i][j] != 0 && grid[i][j] != 1)) {
+                    std::cerr << "Erreur : fichier corrompu ou valeurs invalides (attendu uniquement 0 ou 1).\n";
+                    return;
                 }
-                grille.push_back(ligne);
-            }
-            fichier.close();
-            return 0;
-        }
-
-        void PrintMatrix(std::vector<std::vector<bool>>& matrix){
-            for (const auto& lign : matrix){
-                for (const auto& elem : lign){
-                    std::cout << elem << " ";
-                }
-                std::cout << std::endl;
             }
         }
+        file.close();
+        std::cout << "Matrice chargée depuis le fichier avec succès.\n";
+    }
 
-        std::vector<std::vector<bool>> GetList(){
-            FileInMatrix();
-            PrintMatrix(grille);
-            return grille;
+    void printGrid() const override {
+        for (const auto& row : grid) {
+            for (const auto& cell : row) {
+                std::cout << cell << " ";
+            }
+            std::cout << std::endl;
         }
+    }
+
+    void setGrid(const std::vector<std::vector<int>>& newGrid) {
+        grid = newGrid;
+    }
+
+    std::vector<std::vector<int>> GetList() {
+        return grid;
+    }
 };
 
-#endif
+#endif 

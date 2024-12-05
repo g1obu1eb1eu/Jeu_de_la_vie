@@ -4,28 +4,33 @@
 #include <ctime>
 #include <cstdlib>
 #include "Cells.hpp"
+#include "Terminal.hpp"
 
 class Window{
     private:
         File Myfile;
-        float cellSize=0.5, gridWidth, gridHeight;
-        std::vector<std::vector<bool>> grid;
+        int cellSize=10, gridWidth, gridHeight;
+        std::vector<std::vector<int>> grid;
         
     public:
-        Window(const std::string& filename): Myfile(filename), grid(Myfile.GetList()) {}
+        // Window(const std::string& filename): Myfile(filename), grid(Myfile.GetList()){}
 
         void renderGrid(sf::RenderWindow &window) {
             int x, y;
             gridHeight = grid.size();
             gridWidth = grid[0].size();
 
-            window.clear();
-
             sf::RectangleShape cell(sf::Vector2f(cellSize - 1.0f, cellSize - 1.0f));
+            window.clear();
             for (x = 0; x < gridHeight; x++) {
                 for (y = 0; y < gridWidth; y++) {
                     if (grid[x][y]) {
                         cell.setPosition(x * cellSize, y * cellSize);
+                        // if (grid[y][x] == 1) {  
+                        //     cell.setFillColor(sf::Color::Green);  
+                        // } else {
+                        //     cell.setFillColor(sf::Color::Black);  
+                        // }
                         window.draw(cell);
                     }
                 }
@@ -34,16 +39,28 @@ class Window{
         }
 
         void run() {
+            std::string MyTxt = "../../src/grille.txt";
+            bool runCode = false;
+
             gridHeight = grid.size();
             gridWidth = grid[0].size();
+
+            File file(MyTxt);
+            Cells myCells(file);
 
             sf::RenderWindow window(sf::VideoMode(gridWidth * cellSize, gridHeight * cellSize), "Game of Life");
 
             while (window.isOpen()) {
                 sf::Event event;
                 while (window.pollEvent(event)) {
-                    if (event.type == sf::Event::Closed)
-                        window.close();
+                    if (event.type == sf::Event::Closed) window.close();
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) runCode = true;
+                    if (runCode) {
+                        
+                        myCells.NextCell();
+                        
+                    }
+                    
                 }
 
                 renderGrid(window);
@@ -55,16 +72,16 @@ class Window{
 
 
 int main() {
-    std::string MyTxt = "../../src/grille.txt";
-    File file(MyTxt);
-    Cells myCells(file);
-    for (int i =0; i < 3; i++) myCells.NextCell();;
+    Terminal terminal; 
+    terminal.runMenu(); 
+ 
+    // std::string MyTxt = "../../src/grille.txt";
 
-    // /*---------------------Fenêtre SFML---------------------*/
+    // // /*---------------------Fenêtre SFML---------------------*/
 
-    // Window instance
-    Window gameWindow(MyTxt); 
-    gameWindow.run();
+    // // Window instance
+    // Window gameWindow(MyTxt); 
+    // gameWindow.run();
 
     return 0;
 }

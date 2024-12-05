@@ -4,51 +4,55 @@
 #include "File.hpp"
 
 class Cells {
-    private:
-        File Myfile;
-        std::vector<std::vector<bool>> MyList;
-    public:
+private:
+    File Myfile;
+    std::vector<std::vector<int>> MyList;
 
-        Cells (File& file) : Myfile(file), MyList(Myfile.GetList()) {}
+public:
+    Cells(File& file) : Myfile(file) {
+        Myfile.createMatrix();
+        MyList = Myfile.GetList();
+    }
 
-        void NextCell(){
-            auto TempList = MyList;
-            for (int i = 0; i < TempList.size(); i++){
-                for (int j = 0; j < TempList[i].size(); j++){
-                    bool val = TempList[i][j];
-                    int SurrCells = CheckSurounding(i, j);
+    void NextCell() {
+        auto TempList = MyList;
+        for (int i = 0; i < TempList.size(); i++) {
+            for (int j = 0; j < TempList[i].size(); j++) {
+                int val = TempList[i][j];
+                int SurrCells = CheckSurounding(i, j);
 
-                    if(val && (SurrCells < 2 || SurrCells > 3)){
-                        TempList[i][j] = false;
-                    }
+                if (val && (SurrCells < 2 || SurrCells > 3)) {
+                    TempList[i][j] = 0;
+                }
 
-                    if((!val) && SurrCells == 3){
-                        TempList[i][j] = true;
-                    }
+                if ((!val) && SurrCells == 3) {
+                    TempList[i][j] = 1;
                 }
             }
-
-            MyList = TempList;
-            std::cout<<std::endl;
-            Myfile.PrintMatrix(MyList);
         }
 
-        int CheckSurounding(int& lign, int& col){
-            int compt = 0, myCol = 0, myLign = 0;
-            for (int i = -1; i <= 1; i++){
-                for (int j = -1; j<=1; j++){
-                    if (i == 0 && j == 0) continue;
-                            
-                    myLign = lign + i;
-                    myCol = col + j;
+        MyList = TempList;
 
-                    if ((myLign >= 0) && (myLign < MyList.size()) && (myCol >= 0) && (myCol < MyList[0].size())) {
-                        compt+=MyList[myLign][myCol];
-                    }
+        Myfile.setGrid(MyList);
+        Myfile.printGrid();
+    }
+
+    int CheckSurounding(int lign, int col) {
+        int compt = 0, myCol = 0, myLign = 0;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) continue;
+
+                myLign = lign + i;
+                myCol = col + j;
+
+                if ((myLign >= 0) && (myLign < MyList.size()) && (myCol >= 0) && (myCol < MyList[0].size())) {
+                    compt += MyList[myLign][myCol];
                 }
             }
-            return compt;
         }
+        return compt;
+    }
 };
 
-#endif
+#endif // CELLS_HPP
