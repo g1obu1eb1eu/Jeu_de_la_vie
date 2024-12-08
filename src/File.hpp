@@ -13,11 +13,11 @@ public:
     File(const std::string& file) : filename(file) {}
     ~File() = default;
 
-    void createMatrix() override {
+    bool createMatrix() override {
         std::ifstream file(filename);
         if (!file) {
             std::cerr << "Erreur : impossible d'ouvrir le fichier " << filename << ".\n";
-            return;
+            return false;
         }
 
         int rows, cols;
@@ -29,12 +29,12 @@ public:
             for (int j = 0; j < cols; ++j) {
                 if (!(file >> grid[i][j]) || (grid[i][j] != 0 && grid[i][j] != 1)) {
                     std::cerr << "Erreur : fichier corrompu ou valeurs invalides (attendu uniquement 0 ou 1).\n";
-                    return;
+                    return false;
                 }
             }
         }
         file.close();
-        std::cout << "Matrice chargée depuis le fichier avec succès.\n";
+        return true;
     }
 
     void printGrid() const override {
@@ -50,9 +50,35 @@ public:
         grid = newGrid;
     }
 
-    std::vector<std::vector<int>> GetList() {
-        return grid;
+    Matrice* clone() const override {
+        File* copy = new File(filename);
+        copy->setGrid(grid);
+        return copy;
     }
+
+    void rewriteFile(const std::vector<std::vector<int>>& myGrid, std::string& filename){
+        //Ouveture en mode écriture -> écrase les données
+        std::ofstream file(filename, std::ios::out | std::ios::trunc);
+        if (!file) {
+            std::cerr << "Erreur : impossible d'ouvrir le fichier " << filename << ".\n";
+            return;
+        }
+
+        int rows = myGrid.size();
+        int cols = myGrid[0].size();
+        file << rows << " " << cols << "\n";
+
+        for (const auto& row : myGrid) {
+            for (const auto& cell : row) {
+                file << cell << " ";
+            }
+            file << "\n";
+        }
+
+        file.close();
+    }
+
+
 };
 
 #endif 

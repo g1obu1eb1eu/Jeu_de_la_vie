@@ -13,7 +13,7 @@ public:
     MyMatrice() : rows(0), cols(0) {}
     ~MyMatrice() = default;
 
-    void createMatrix() override {
+    bool createMatrix() override {
         std::cout << "Entrez le nombre de lignes : ";
         std::cin >> rows;
         std::cout << "Entrez le nombre de colonnes : ";
@@ -33,7 +33,8 @@ public:
                 }
             }
         }
-        std::cout << "Matrice créée avec succès.\n";
+        std::cout << "Matrice creee avec succes.\n";
+        return true;
     }
 
     void printGrid() const override {
@@ -44,6 +45,13 @@ public:
             std::cout << std::endl;
         }
     }
+
+    Matrice* clone() const override {
+        MyMatrice* copy = new MyMatrice();
+        copy->grid = this->grid; 
+        return copy;
+    }
+
 };
 
 #endif // MYMATRICE_HPP
