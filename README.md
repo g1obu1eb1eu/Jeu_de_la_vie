@@ -5,6 +5,3 @@ Ce répertoire contient un modèle basique pour le jeu de la vie, intégrant un 
 
 Plusieurs modifications pourront être effectués ultérieurement.
 
-
-## How to Use
-
