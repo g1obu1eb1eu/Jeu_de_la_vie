@@ -18,25 +18,29 @@ public:
         MyList = Myfile.GetList();
     }
 
+    //Regarde l'état du mode toroide
     void setToroidalMode(bool enable) {
         isToroidal = enable;
     }
-
+    
+    //Fonction pour ajouter des observeurs dans la liste d'observateurs
     void addObserver(Observer* obs) {
         observers.push_back(obs);
     }
 
+    //Fonction pour retirer des observeurs dans la liste d'observateurs
     void removeObserver(Observer* obs) {
     observers.erase(std::remove(observers.begin(), observers.end(), obs), observers.end());
     }
 
-
+    //Fonction pour notifier les observateurs
     void notifyObservers() {
         for (auto obs : observers) {
             obs->update(MyList); 
         }
     }
 
+    //Fonction pour mettre à jour l'état des cellules sur la grille
     void NextCell() {
         auto TempList = MyList;
         for (int i = 0; i < TempList.size(); i++) {
@@ -59,21 +63,18 @@ public:
         notifyObservers();
     }
 
-    // en gros la, le drapeau est initialiser de base sur false et elle va se comporter normalment tant que le drapeau n'est pas activé
+    //Vérifie les cellules alentours
     int CheckSurounding(int lign, int col) {
         int compt = 0;
         int rows = MyList.size();
         int cols = MyList[0].size();
-        //la on verifie si elle est torique ou non soir s'il y'a le drapeau ou non 
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                // cas 1 : NON TORIQUE donc elle fonctionne normalement 
                 if (i == 0 && j == 0) continue;
 
                 int newRow = lign + i;
                 int newCol = col + j;
 
-                //cas 2 : TORIQUE donc on applique avec les voisins en -1
                 if (isToroidal) {
                     // Calcul des indices toriques
                     newRow = (newRow + rows) % rows;

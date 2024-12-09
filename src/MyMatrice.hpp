@@ -13,6 +13,7 @@ public:
     MyMatrice() : rows(0), cols(0) {}
     ~MyMatrice() = default;
 
+    //Méthode pour créer un matrice
     bool createMatrix() override {
         std::cout << "Entrez le nombre de lignes : ";
         std::cin >> rows;
@@ -37,6 +38,7 @@ public:
         return true;
     }
 
+    //Méthode pour afficher la matrice
     void printGrid() const override {
         for (const auto& row : grid) {
             for (const auto& cell : row) {
@@ -46,6 +48,7 @@ public:
         }
     }
 
+    //Méthode pour cloner la matrice actuelle
     Matrice* clone() const override {
         MyMatrice* copy = new MyMatrice();
         copy->grid = this->grid; 

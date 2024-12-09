@@ -13,6 +13,7 @@ public:
     File(const std::string& file) : filename(file) {}
     ~File() = default;
 
+    //Méthode pour créer un matrice
     bool createMatrix() override {
         std::ifstream file(filename);
         if (!file) {
@@ -37,6 +38,7 @@ public:
         return true;
     }
 
+    //Méthode pour afficher la matrice
     void printGrid() const override {
         for (const auto& row : grid) {
             for (const auto& cell : row) {
@@ -46,16 +48,19 @@ public:
         }
     }
 
+    //Méthode pour initialiser une grille
     void setGrid(const std::vector<std::vector<int>>& newGrid) {
         grid = newGrid;
     }
 
+    //Méthode pour cloner la matrice actuelle
     Matrice* clone() const override {
         File* copy = new File(filename);
         copy->setGrid(grid);
         return copy;
     }
 
+    //Méthode pour réécrire une matrice dans un fichier
     void rewriteFile(const std::vector<std::vector<int>>& myGrid, std::string& filename){
         //Ouveture en mode écriture -> écrase les données
         std::ofstream file(filename, std::ios::out | std::ios::trunc);

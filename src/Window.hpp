@@ -15,13 +15,14 @@ private:
     Matrice* matrice, *prevMatrice, *prevPrevMatrice;
     Cells* cells;
     int cellSize = 15, gridWidth, gridHeight, iterationCount=0;
-    bool isToroidal, runCode=false; // État du mode torique
+    bool isToroidal, runCode=false; 
 
-    sf::CircleShape toroidalIndicator; // Cercle pour indiquer le mode torique
+    sf::CircleShape toroidalIndicator; 
     sf::Font font; 
     sf::Text iterationText;     
     sf::RectangleShape iterationBackground;
     
+    //Change l'indicateur torique
     void updateToroidalIndicator() {
         // Change la couleur du cercle en fonction du mode torique
         if (isToroidal) {
@@ -31,6 +32,7 @@ private:
         }
     }
 
+    //Mets à jour l'affichage des itérations
     void updateIterationText() {
         iterationText.setString("Iterations: " + std::to_string(iterationCount));
         sf::FloatRect textBounds = iterationText.getLocalBounds();
@@ -70,6 +72,7 @@ public:
     
     }
 
+    //Lance ou non le mode toroide
     void toggleToroidalMode() {
         isToroidal = !isToroidal;
         updateToroidalIndicator();
@@ -80,7 +83,7 @@ public:
 
     // Méthode pour dessiner la grille
     void renderGrid(sf::RenderWindow& window) {
-        auto grid = matrice->GetList(); // Récupère la grille
+        auto grid = matrice->GetList(); 
         sf::RectangleShape cell(sf::Vector2f(cellSize - 1.0f, cellSize - 1.0f));
         window.clear();
 

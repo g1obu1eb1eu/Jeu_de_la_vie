@@ -11,6 +11,7 @@ private:
 public:
     Motif(const std::vector<std::vector<int>>& pat) : pattern(pat) {}
 
+    //Modifie la grille en ajoutant les différents motifs 
     void applyToGrid(std::vector<std::vector<int>>& grid, int startRow, int startCol) {
         for (int i = 0; i < pattern.size(); i++) {
             for (int j = 0; j < pattern[i].size(); j++) {
@@ -24,6 +25,7 @@ public:
         }
     }
 
+    //Définis les motifs prédéfinis
     static std::vector<Motif> predefinedMotifs() {
         return {
             Motif({{1, 1}, {1, 1}}), // Bloc

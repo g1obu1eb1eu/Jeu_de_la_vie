@@ -9,6 +9,7 @@
 
     class TerminalObserver : public Observer {
     public:
+        //Affiche une matrice après avoir été notifié
         void update(const std::vector<std::vector<int>>& grid) override {
             std::cout << "\nNouvel etat de la matrice :\n";
             for (const auto& row : grid) {
@@ -29,6 +30,7 @@
         bool isToroidal, fin=false;
         static TerminalObserver terminalObserver;
 
+        //Affiche le menu
         void displayMenu() {
             std::cout << "\nMenu :\n";
             std::cout << "1. Creer une matrice dynamiquement\n";
@@ -43,6 +45,7 @@
             std::cout << "Votre choix : ";
         }
 
+        //Vérifie que l'utilisateur a bien renseigné une bonne valeur
         bool getUserChoice() {
             std::cin >> choice;
             if (std::cin.fail()) {
@@ -59,6 +62,7 @@
             std::cout << "Mode torique " << (isToroidal ? "active" : "desactive") << ".\n";
         }
 
+        //Méthode pour demander si l'utilisateur veut arrêter la simulation ou non
         void endGame(){
             std::string rep;
             do{
@@ -78,6 +82,7 @@
             }while (rep !="y" && rep !="n");                            
         }
 
+        //Lance une série d'action en fonction du choix de l'utilisateur
         void processChoice() { 
             switch (choice) {
                 case 1:
@@ -273,6 +278,7 @@
             delete initialMatrice;
         }
 
+        // Exécutable
         void runMenu() {
             do{
             std::cout << "Voulez vous :\n - 1.Passer en mode terminal.\n - 2.Passer en mode graphique.\n";
